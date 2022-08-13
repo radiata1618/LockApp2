@@ -1,35 +1,56 @@
 package com.app.lockapp2.framework.app.di
 
-import AppDatabase
 import LockTimeDao
+import LockTimeDatabase
 import android.app.Application
 import android.content.Context
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Singleton
 
+@ExperimentalFoundationApi
+//@ExperimentalMaterialApi
+@ExperimentalComposeUiApi
+@InternalCoroutinesApi
+@ExperimentalAnimationApi
+//@ExperimentalMaterialNavigationApi
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+//★AppModuleが不使用となっている★
+
     @Provides
     @Singleton
-    private fun provideDatabase(
+    fun provideLockTimeDatabase(
         app: Application
-    ): AppDatabase {
+    ): LockTimeDatabase {
         return Room.databaseBuilder(
             app,
-            AppDatabase::class.java,
+            LockTimeDatabase::class.java,
             "mainDatabase"
         ).build()
     }
 
     @Provides
     @Singleton
-    fun provideLockTimeDao(database: AppDatabase): LockTimeDao {
-        return database.lockTimeDao()
+    fun provideLockTimeDao(database: LockTimeDatabase): LockTimeDao {
+        return database.lockTimeDatabaseDao
     }
+
+//    @Provides
+//    @Singleton
+//    fun provideLockTimeDao(app: Application): LockTimeDao {
+//        return Room.databaseBuilder(
+//            app,
+//            LockTimeDatabase::class.java,
+//            "mainDatabase"
+//        ).build().lockTimeDatabaseDao
+//    }
 }
